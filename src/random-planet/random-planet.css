@@ -1,0 +1,24 @@
+.planet-container{
+    /*max-height: 200px;*/
+    width: 100%;
+}
+.planet-container-img {
+    /*height: 100%;*/
+    max-height: 100%;
+    /*height: auto;*/
+    max-width: 150px;
+    background-size: cover;
+    /*background-size: contain;*/
+    overflow: hidden;
+}
+.list-group li {
+    border-left: none;
+    border-right: none;
+}
+.list-group li:first-child{
+    border-top: none;
+}
+.planet-container__header{
+     margin-left: -2.5rem;
+
+ }
