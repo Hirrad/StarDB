@@ -4,6 +4,7 @@ import Header from "../header";
 import RandomPlanet from "../random-planet";
 import ItemsList from "../items-list";
 import PlanetItem from "../planet-item";
+import '../services/swapi'
 
 export default class App extends Component {
     render() {
