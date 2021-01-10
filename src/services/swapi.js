@@ -2,7 +2,13 @@ export default class SwapiServise {
     __dbSwapi = 'https://swapi.dev/api';
 
     async getResource(url) {
+
         const res = await fetch(`${this.__dbSwapi}${url}`);
+
+        if(!res) {
+            return console.log('fg')
+        }
+        console.log(res);
         if (!res.ok) {
             throw new Error(`Could not fetch ${url}, received ${res.status}`)
         }
@@ -53,6 +59,7 @@ export default class SwapiServise {
             id:this._extractId(planet)
 
         }
+
     }
 }
 
