@@ -3,40 +3,57 @@ import './random-planet.css';
 import SwapiServise from '../services/swapi_1';
 import Loading from "../loading";
 import Img404 from './src/404.jpg';
+import ErrorMessage from "../error-message";
 
 
 export default class RandomPlanet extends Component {
     swapiServise = new SwapiServise();
     state = {
         planet: {},
-        loading: true
+        loading: true,
+        error: false
     }
 
-    constructor() {
-        super();
-        this.updatePlanet();
-
+    componentDidMount() {
+        this.updatePlanet()
+      this.interval=  setInterval(()=>this.updatePlanet() ,5000)
     }
+componentWillUnmount() {
+        clearInterval(this.interval)
+}
+
 
     onPlanetLoading = (planet) => {
         this.setState({
             planet,
+            loading: false,
+            error: false
+        })
+    }
+
+    showError = () => {
+        this.setState({
+            error: true,
             loading: false
         })
     }
 
-
     updatePlanet() {
-        const id = Math.floor(Math.random() * 58 + 2);
-        this.swapiServise.getPlanet(id).then(this.onPlanetLoading)
+        const id = Math.floor(Math.random() * 88 + 2);
+
+        this.swapiServise.getPlanet(id).then(this.onPlanetLoading).catch(
+            this.showError);
     }
 
     render() {
-        const {planet, loading} = this.state;
-        const displayPlanet = loading ? <Loading/> : null;
-        const displaySpiner = !loading ? <ItemRandomPlanet planet={planet}/> : null;
+        const {planet, loading, error} = this.state;
+        const showPlanet = !(loading || error);
+        const displaySpiner = (loading) ? <Loading/> : null;
+        const displayError = (error) ? <ErrorMessage/> : null;
+        const displayPlanet = showPlanet ? <ItemRandomPlanet planet={planet}/> : null;
         return <div className='d-flex justify-content-center'>
             <div className="row d-flex justify-content-center align-items-center bg-dark  w-75">
+                {displayError}
                 {displayPlanet}
                 {displaySpiner}
 
@@ -61,13 +78,13 @@ const ItemRandomPlanet = ({planet}) => {
 
 
             </div>
-            <div className="col-5">
+            <div className="col-6">
 
                 <h2 className='planet-container__header'>{name}</h2>
                 <ul className="list-group mb-2">
-                    <li className="list-group-item">{`Population: ${population}`}</li>
-                    <li className="list-group-item">{`Diameter: ${diameter} km`}</li>
-                    <li className="list-group-item">{`Rotation Period: ${rotationPeriod} days`}</li>
+                    <li className="list-group-item">{`Население: ${population}`}</li>
+                    <li className="list-group-item">{`Диаметр: ${diameter} км`}</li>
+                    <li className="list-group-item">{`Период вращения: ${rotationPeriod} дней`}</li>
                 </ul>
             </div>
         </React.Fragment>

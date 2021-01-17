@@ -1,6 +1,7 @@
 export default class SwapiServise {
     // __dbSwapi = 'https://swapi.dev/api';
     __dbSwapi = 'https://www.swapi.tech/api';
+
     async getResource(url) {
 
         const res = await fetch(`${this.__dbSwapi}${url}`);
@@ -12,23 +13,25 @@ export default class SwapiServise {
     }
 
     async getPeople() {
-        const res = await this.getResource('/people/')
-        return res.results
+        const res = await this.getResource('/people/');
+
+        return res.results.map(this._dataCorrectionPeople);
     }
 
     async getPerson(id) {
         const res = await this.getResource(`/people/${id}`)
-        return res
+        return res.results
     }
 
     async getPlanets() {
         const res = await this.getResource('/planets/')
-        return res.result
+
+        return res
     }
 
     async getPlanet(id) {
         const res = await this.getResource(`/planets/${id}/`)
-        return this._dataCorrection(res.result.properties);
+        return this._dataCorrectionPlanet(res.result.properties);
     }
 
     async getStarships() {
@@ -41,21 +44,32 @@ export default class SwapiServise {
         return res
     }
 
-    _extractId(item){
-        const idRegExp =/([0-9])$/;
-        return  item.url.match(idRegExp)[1];
+    _extractId(item) {
+        const idRegExp = /([0-9])$/;
+        return item.url.match(idRegExp)[1];
     }
-    _dataCorrection(planet) {
+
+    _dataCorrectionPlanet(planet) {
 
         return {
             diameter: planet.diameter,
             population: planet.population,
             rotationPeriod: planet.rotation_period,
             name: planet.name,
-            id:this._extractId(planet)
+            id: this._extractId(planet)
 
         }
 
     }
-}
 
+    _dataCorrectionPeople(people) {
+        return {
+            id: people.uid,
+            name: people.name,
+
+        }
+    }
+}
+//
+// const swapi = new SwapiServise();
+// swapi.getPeople().then((body) => console.log(body));
