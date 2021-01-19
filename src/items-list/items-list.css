@@ -1,0 +1,8 @@
+.itemCursor{
+    cursor: pointer;
+
+}
+.itemCursor:hover{
+    color: #00efb2;
+    background-color: #1d2f42;
+}
