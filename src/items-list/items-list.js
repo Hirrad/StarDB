@@ -1,50 +1,68 @@
 import React, {Component} from 'react';
 import './items-list.css';
-import SwapiServise from "../services/swapi";
 import Loading from "../loading";
 
 export default class ItemsList extends Component {
-    swapiSerwise =new SwapiServise();
+
     state = {
         loading: true,
-        people: null
+        dataList: null
     }
+
+    peopleShow({dataList, postIdPerson, renderList}) {
+
+        if (renderList) {
+            return dataList.map((dataList) => {
+                const {id} = dataList;
+                const text = renderList(dataList);
+                return <li className="list-group-item itemCursor" key={id} onClick={() => postIdPerson(id)}>{text}</li>
+            })
+        }
+        return <Loading/>;
+
+
+    }
+
     componentDidMount() {
-        this.upGetPeope();
-
-        console.log(this.state.people)
+        if (this.props.data) this.upGetPeople();
     }
-   upGetPeope=()=>{
-this.swapiSerwise.getPeople().then((people)=>{
-    this.setState({
-        people,
-        loading:false})
-})
 
-}
+    upGetPeople() {
+        const dataList = this.props.data;
+
+        dataList().then((dataList) => {
+            this.setState({
+                dataList,
+                loading: false
+            })
+        })
+
+    }
 
 
     render() {
-        const {people,loading} = this.state;
-        const{postIdPerson}=this.props;
-        if(!people){
+        const {dataList, loading} = this.state;
+        const {postIdPerson,renderList} = this.props;
+
+
+        if (!dataList) {
             return <Loading/>
         }
 
         return <div className='col-5'>
             <ul className="list-group">
-                {!loading?<PeopleShow people={people} postIdPerson={postIdPerson}/>:null}
-                {loading?<Loading/>:null}
+                {!loading ? <this.peopleShow dataList={dataList} postIdPerson={postIdPerson} renderList={renderList}/> : null}
+                {loading ? <Loading/> : null}
 
             </ul>
         </div>;
     }
 }
 
-function PeopleShow({people, postIdPerson}) {
-    // console.log(people)
-    return people.map((item)=>{
-           return <li className="list-group-item itemCursor" key={item.id} onClick={()=>postIdPerson(item.id)}>{item.name}</li>
-        })
-
-}
+// PeopleShow({people, postIdPerson}) {
+//
+//     return people.map(({id, name})=>{
+//            return <li className="list-group-item itemCursor" key={id} onClick={()=>postIdPerson(id)}>{name}</li>
+//         })
+//
+// }

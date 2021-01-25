@@ -35,10 +35,12 @@ export default class PlanetItem extends Component {
 
     render() {
         const {person,loading} = this.state;
+        const showQoshn = (loading & person);
         return <div className='d-flex justify-content-center col-6 h-100'>
             <div className="row d-flex justify-content-center align-items-center bg-dark w-100">
                 {!loading?<ShowPerson person={person}/>:null}
-                {loading?<Loading/>:null}
+                {loading?'Выбор сдлайте свой!':null}
+                {showQoshn?<Loading/>:null}
 
 
             </div>
@@ -46,7 +48,7 @@ export default class PlanetItem extends Component {
     }
 }
 const ShowPerson = ({person}) => {
-    console.log(person);
+
     if(!person){
         return (
             <div className="col">
