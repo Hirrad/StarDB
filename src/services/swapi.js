@@ -1,7 +1,7 @@
 export default class SwapiServise {
     __dbSwapi = 'https://swapi.dev/api';
 
-    async getResource(url) {
+    getResource = async (url) => {
 
         const res = await fetch(`${this.__dbSwapi}${url}`);
 
@@ -17,31 +17,31 @@ export default class SwapiServise {
 
     getPeople = async () => {
         const res = await this.getResource('/people/')
-        return res.results.map((body)=>this._dataCorrection('people',body))
+        return res.results.map((body) => this._dataCorrection('people', body))
     }
 
     getPerson = async (id) => {
         const res = await this.getResource(`/people/${id}`)
-        return this._dataCorrection('people',res);
+        return this._dataCorrection('people', res);
     }
 
-    async getPlanets() {
+    getPlanets = async () => {
         const res = await this.getResource('/planets/')
-        return res.results
+        return res.results.map((body) => this._dataCorrection('planet', body))
     }
 
-    async getPlanet(id) {
+    getPlanet = async (id) => {
         const res = await this.getResource(`/planets/${id}/`)
-        return this._dataCorrection('planet',res);
+        return this._dataCorrection('planet', res);
     }
 
-    async getStarships() {
-        const res = await this.getResource(`/planets/`)
-        return res.results.map(this._dataCorrection)
+    getStarships = async () => {
+        const res = await this.getResource(`/starships/`)
+        return res.results.map((body) => this._dataCorrection('starship', body))
     }
 
-    async getStarship(id) {
-        const res = await this.getResource(`/planets/${id}/`)
+    getStarship = async (id) => {
+        const res = await this.getResource(`/starships/${id}/`)
         return res
     }
 
@@ -50,7 +50,7 @@ export default class SwapiServise {
         return item.url.match(idRegExp)[1];
     }
 
-    _dataCorrection(item,data) {
+    _dataCorrection(item, data) {
 
         switch (item) {
             case 'people':
@@ -59,12 +59,12 @@ export default class SwapiServise {
                     eyeColor: data.eye_color,
                     gender: data.gender,
                     name: data.name,
-                    height:data.height,
+                    height: data.height,
                     mass: data.mass,
                     id: this._extractId(data)
 
                 }
-            case 'planets':
+            case 'planet':
                 return {
                     diameter: data.diameter,
                     population: data.population,
@@ -73,14 +73,26 @@ export default class SwapiServise {
                     id: this._extractId(data)
 
                 }
+            case 'starship':
+                return {
+                    model: data.model,
+                    cost: data.cost_in_credits,
+                    hyperdrive: data.hyperdrive_rating,
+                    name: data.name,
+                    id: this._extractId(data),
+                    maxSpeed: data.max_atmosphering_speed,
+                    starshipClass: data.starship_class
+
+
+                }
             default:
                 return null
 
         }
 
 
-
     }
+
     // _dataCorrection(planet) {
     //
     //     return {
@@ -95,3 +107,5 @@ export default class SwapiServise {
     // }
 }
 
+const rt = new SwapiServise();
+rt.getStarships().then((a) => console.log(a))
