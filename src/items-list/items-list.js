@@ -8,9 +8,7 @@ export default class ItemsList extends Component {
         loading: true,
         dataList: null
     }
-
     peopleShow({dataList, postIdPerson, renderList}) {
-
         if (renderList) {
             return dataList.map((dataList) => {
                 const {id} = dataList;
@@ -19,50 +17,36 @@ export default class ItemsList extends Component {
             })
         }
         return <Loading/>;
-
-
     }
-
     componentDidMount() {
         if (this.props.data) this.upGetPeople();
     }
-
     upGetPeople() {
         const dataList = this.props.data;
-
         dataList().then((dataList) => {
             this.setState({
                 dataList,
                 loading: false
             })
         })
-
     }
-
-
     render() {
         const {dataList, loading} = this.state;
-        const {postIdPerson,renderList} = this.props;
-
-
+        const {postIdPerson, renderList} = this.props;
         if (!dataList) {
             return <Loading/>
         }
 
-        return <div className='col-5'>
+        return (
             <ul className="list-group">
-                {!loading ? <this.peopleShow dataList={dataList} postIdPerson={postIdPerson} renderList={renderList}/> : null}
+                {!loading ?
+                    <this.peopleShow dataList={dataList} postIdPerson={postIdPerson} renderList={renderList}/> : null}
                 {loading ? <Loading/> : null}
 
             </ul>
-        </div>;
+        )
+
     }
 }
 
-// PeopleShow({people, postIdPerson}) {
-//
-//     return people.map(({id, name})=>{
-//            return <li className="list-group-item itemCursor" key={id} onClick={()=>postIdPerson(id)}>{name}</li>
-//         })
-//
-// }
+

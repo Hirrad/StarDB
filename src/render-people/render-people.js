@@ -1,27 +1,43 @@
 import React, {Component} from 'react'
 import ItemsList from "../items-list";
-import PlanetItem from "../planet-item";
+import DataItem from "../data-item";
+import Loading from "../loading";
+import Row from "../Row";
+import ErrorWrapper from "../error-wrapper";
+import SwapiServise from "../services/swapi";
 
 export default class RenderPeople extends Component {
+    swapiServise =new SwapiServise();
     state = {
-        id: null
+        id: null,
     }
 
     postIdPerson = (id) => {
+
         this.setState({id})
-
     }
-
     render() {
         const {id} = this.state
-        const {dataPeople, renderList} = this.props;
+
+        const {dataItems, renderList,renderItem,visualization} = this.props;
+        const itemList = (
+            <ItemsList postIdPerson={this.postIdPerson}
+                       data={dataItems}
+                       renderList={renderList}/>
+        )
+        const peopletItem = (
+
+            <DataItem id={id}
+                      dataGet={visualization}
+                      renderItem={renderItem}/>
+
+        )
         return (
-            <div className='body-container d-flex justify-content-between mt-5'>
-                <ItemsList postIdPerson={this.postIdPerson}
-                           data={dataPeople}
-                           renderList={renderList}/>
-                <PlanetItem id={id}/>
-            </div>
+            <ErrorWrapper>
+                <Row left={itemList} right={peopletItem}/>
+            </ErrorWrapper>
+
+
         )
     }
 
