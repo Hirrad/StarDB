@@ -1,5 +1,6 @@
 export default class SwapiServise {
     __dbSwapi = 'https://swapi.dev/api';
+    __dbUrlI='https://starwars-visualguide.com/assets/img';
 
     getResource = async (url) => {
 
@@ -46,7 +47,7 @@ export default class SwapiServise {
 
     getStarship = async (id) => {
         const res = await this.getResource(`/starships/${id}/`)
-        return res
+        return this._dataCorrection('starship', res)
     }
 
     _extractId(item) {
@@ -66,7 +67,8 @@ export default class SwapiServise {
                     name: data.name,
                     height: data.height,
                     mass: data.mass,
-                    id: this._extractId(data)
+                    id: this._extractId(data),
+                    url:`${this.__dbUrlI}/characters/${this._extractId(data)}.jpg`
 
                 }
             case 'planet':
@@ -75,7 +77,8 @@ export default class SwapiServise {
                     population: data.population,
                     rotationPeriod: data.rotation_period,
                     name: data.name,
-                    id: this._extractId(data)
+                    id: this._extractId(data),
+                    url:`${this.__dbUrlI}/planets/${this._extractId(data)}.jpg`
 
                 }
             case 'starship':
@@ -86,8 +89,8 @@ export default class SwapiServise {
                     name: data.name,
                     id: this._extractId(data),
                     maxSpeed: data.max_atmosphering_speed,
-                    starshipClass: data.starship_class
-
+                    starshipClass: data.starship_class,
+                    url:`${this.__dbUrlI}/starships/${this._extractId(data)}.jpg`
 
                 }
             default:
@@ -98,5 +101,5 @@ export default class SwapiServise {
 }
 const swdip = new SwapiServise();
 // swip.getPeople(5).then((body) => console.log(body))
-// swip.getPerson(6).then((body)=>console.log(body))
+// swdip.getStarship(6).then((body)=>console.log(body))
 
