@@ -22,7 +22,7 @@ export default class RenderPeople extends Component {
         const {dataItems, renderList,renderItem,visualization} = this.props;
         const itemList = (
             <ItemsList postIdPerson={this.postIdPerson}
-                       data={dataItems}
+                       // data={dataItems}
                        renderList={renderList}/>
         )
         const peopletItem = (

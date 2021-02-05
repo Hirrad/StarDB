@@ -19,15 +19,12 @@ export default class RandomPlanet extends Component {
 componentWillUnmount() {
         clearInterval(this.interval)
 }
-
     onPlanetLoading = (planet) => {
         this.setState({
             planet,
             loading: false
         })
     }
-
-
     updatePlanet() {
         const id = Math.floor(Math.random() * 58 + 2);
         this.swapiServise.getPlanet(id).then(this.onPlanetLoading)
@@ -41,12 +38,9 @@ componentWillUnmount() {
             <div className="row d-flex justify-content-center align-items-center bg-dark  w-75">
                 {displayPlanet}
                 {displaySpiner}
-
-
             </div>
         </div>
     }
-
 }
 const ItemRandomPlanet = ({planet}) => {
 

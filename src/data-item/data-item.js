@@ -1,84 +1,73 @@
 import React, {Component} from 'react';
 import './data-item.css';
-import Loading from "../loading";
+import Img404 from "../random-planet/src/404.jpg";
+import SwapiServise from "../services/swapi";
 
-export default class DataItem extends Component {
-
-    state = {
-        person: null,
-        loading: true
-    }
-
-    componentDidMount() {
-        if (this.props.id) {
-            this.getUpData();
+const {getPerson} = new SwapiServise()
+const dataItemGhost = (View, dataBase) => {
+    return class extends Component {
+        state = {
+            dataObtained: null,
+            loading: true
         }
 
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevProps.id !== this.props.id) {
-            this.getUpData();
+        componentDidMount() {
+            if (this.props.id) {
+                this.getUpData();
+            }
         }
 
-    }
+        componentDidUpdate(prevProps, prevState, snapshot) {
+            if (prevProps.id !== this.props.id) {
+                this.getUpData();
+            }
+        }
 
-    getUpData = () => {
-
-        if(this.props.dataGet){
-            console.log(this.props.id);
-            const dataGet=this.props.dataGet
-            dataGet(this.props.id).then((person) => {
+        getUpData = () => {
+            dataBase(this.props.id).then((dataObtained) => {
                 this.setState({
-                    person,
+                    dataObtained,
                     loading: false
                 })
             })
         }
 
-    }
-
-    render() {
-        const {person, loading} = this.state;
-        const {renderItem}=this.props
-        const showQoshn = (loading & person);
-        console.log(renderItem);
-        return (
-            <div className="row d-flex justify-content-center align-items-center bg-dark w-100">
-                {(!loading&&renderItem) ? <ShowPerson person={person} renderItem={renderItem}/> : null}
-                {loading ? 'Выбор сдлайте свой!' : null}
-                {showQoshn ? <Loading/> : null}
-            </div>
-        )
+        render() {
+            const {loading, dataObtained} = this.state;
+            if (loading) {
+                return (
+                    <div className="col">
+                        <h2 className='planet-container__header '>Сделайте свой выбор</h2>
+                    </div>
+                )
+            }
+            return (
+                <React.Fragment>
+                    <div className="col planet-container">
+                        <img
+                            src={dataObtained.url}
+                            alt={dataObtained.name} className='img-fluid planet-container-img'
+                            onError={(e) => e.target.src = `${Img404}`}/>
+                    </div>
+                    <div className="col">
+                        <h2 className='planet-container__header'>{dataObtained.name}</h2>
+                        <View {...this.props} loading={loading} dataObtained={dataObtained}/>
+                    </div>
+                </React.Fragment>
+            )
+        }
     }
 }
-const ShowPerson = ({person,renderItem}) => {
-
-    if (!person&&!renderItem ) {
-        return (
-            <div className="col">
-                <h2 className='planet-container__header '>Сделайте свой выбор</h2>
-            </div>
-        )
-    }
+const DataItem = (props) => {
+    const {dataObtained} = props;
+    const renderItem = props.children
+    console.log(props);
     return (
-        renderItem(person)
-        // <React.Fragment>
-        //     <div className="col planet-container">
-        //         <img
-        //             // src={`https://starwars-visualguide.com/assets/img/characters/${person.id}.jpg`}
-        //             src={person.url}
-        //             alt={person.name} className='img-fluid planet-container-img'/>
-        //     </div>
-        //     <div className="col">
-        //         <h2 className='planet-container__header'>{person.name}</h2>
-        //         <ul className="list-group ">s
-        //             <li className="list-group-item">{`День рождения: ${person.birthYear}`}</li>
-        //             <li className="list-group-item">{`Рост: ${person.height}`}</li>
-        //             <li className="list-group-item">{`Пол: ${person.gender}`}</li>
-        //             <li className="list-group-item">{`Вес: ${person.mass}`}</li>
-        //         </ul>
-        //     </div>
-        // </React.Fragment>
+        <ul className="list-group ">
+            {React.Children.map(renderItem, (child, indx) => {
+                return React.cloneElement(child, {dataObtained}, indx);
+            })}
+        </ul>
     )
 }
+export default dataItemGhost(DataItem, getPerson);

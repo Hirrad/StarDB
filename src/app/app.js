@@ -3,36 +3,21 @@ import './app.css';
 import Header from "../header";
 import RandomPlanet from "../random-planet";
 import '../services/swapi'
-import RenderPeople from "../render-people";
 import SwapiServise from "../services/swapi";
 import Row from "../Row";
 import ErrorWrapper from "../error-wrapper";
-import PeopleItem from "../people-item";
 import DataItem from "../data-item";
 import Img404 from "../random-planet/src/404.jpg";
+import ItemsList from "../items-list";
 
 export default class App extends Component {
     swapiServise = new SwapiServise();
+    state = {
+        id: null,
+    }
+    postIdPerson = (id) => {
 
-    renderPeople(person) {
-        return (
-            <React.Fragment>
-                <div className="col planet-container">
-                    <img
-                        src={person.url}
-                        alt={person.name} className='img-fluid planet-container-img'/>
-                </div>
-                <div className="col">
-                    <h2 className='planet-container__header'>{person.name}</h2>
-                    <ul className="list-group ">
-                        <li className="list-group-item">{`День рождения: ${person.birthYear}`}</li>
-                        <li className="list-group-item">{`Рост: ${person.height}`}</li>
-                        <li className="list-group-item">{`Пол: ${person.gender}`}</li>
-                        <li className="list-group-item">{`Вес: ${person.mass}`}</li>
-                    </ul>
-                </div>
-            </React.Fragment>
-        )
+        this.setState({id})
     }
 
     renderStarship(person) {
@@ -57,6 +42,7 @@ export default class App extends Component {
             </React.Fragment>
         )
     }
+
     renderPlanet(person) {
         return (
             <React.Fragment>
@@ -80,40 +66,32 @@ export default class App extends Component {
 
     render() {
         const peopleShow = (
-            <DataItem id={12}
-                      renderItem={this.renderPeople}
-                      dataGet={this.swapiServise.getPerson}/>
+            <DataItem id={this.state.id}>
+                <RenderI parameterName={'name'}
+                         parameterDisplay={'Имя'}/>
+                <RenderI parameterName={'birthYear'}
+                         parameterDisplay={'День рождения'}/>
+                <RenderI parameterName={'gender'}
+                         parameterDisplay={'Пол'}/>
+                <RenderI parameterName={'height'}
+                         parameterDisplay={'Рост'}/>
+            </DataItem>
         )
-        const starshipShow = (
-            <DataItem id={12}
-                      dataGet={this.swapiServise.getStarship}
-                      renderItem={this.renderStarship}/>
+        const itemList = (
+            <ItemsList postIdPerson={this.postIdPerson}
+                       renderList={(item) => `${item.id}: ${item.name}`}/>
         )
         return <div className='container'>
             <Header/>
             <RandomPlanet/>
-            <RenderPeople dataItems={this.swapiServise.getPeople}
-                          renderList={(item) => `${item.id}: ${item.name}`}
-                          renderItem={this.renderPeople}
-                          visualization={this.swapiServise.getPerson}
 
-            />
-            <RenderPeople dataItems={this.swapiServise.getStarships}
-                          renderList={(item) => `${item.id}: ${item.name}`}
-                          renderItem={this.renderStarship}
-                          visualization={this.swapiServise.getStarship}
-            />
-            <RenderPeople dataItems={this.swapiServise.getPlanets}
-                          renderList={(item) => `${item.id}: ${item.name}`}
-                          renderItem={this.renderPlanet}
-                          visualization={this.swapiServise.getPlanet}
-            />
-
-
-            {/*<ErrorWrapper>*/}
-            {/*    <Row left={peopleShow} right={starshipShow}/>*/}
-            {/*</ErrorWrapper>*/}
+            <ErrorWrapper>
+                <Row left={itemList} right={peopleShow}/>
+            </ErrorWrapper>
         </div>;
     }
-
+}
+const RenderI = ({parameterName, parameterDisplay, dataObtained, indx}) => {
+    return <li className="list-group-item"
+               key={indx}>{`${parameterDisplay}: ${dataObtained[parameterName]}`}</li>
 }

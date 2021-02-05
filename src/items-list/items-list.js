@@ -1,52 +1,44 @@
 import React, {Component} from 'react';
 import './items-list.css';
 import Loading from "../loading";
+import SwapiServise from "../services/swapi";
 
-export default class ItemsList extends Component {
 
-    state = {
-        loading: true,
-        dataList: null
-    }
-    peopleShow({dataList, postIdPerson, renderList}) {
-        if (renderList) {
-            return dataList.map((dataList) => {
-                const {id} = dataList;
-                const text = renderList(dataList);
-                return <li className="list-group-item itemCursor" key={id} onClick={() => postIdPerson(id)}>{text}</li>
-            })
+const {getPeople} = new SwapiServise();
+const itemListGhost = (View,dataBase) => {
+    return class extends Component {
+        state = {
+            data: null,
+            loading: true
         }
-        return <Loading/>;
-    }
-    componentDidMount() {
-        if (this.props.data) this.upGetPeople();
-    }
-    upGetPeople() {
-        const dataList = this.props.data;
-        dataList().then((dataList) => {
-            this.setState({
-                dataList,
+        componentDidMount() {
+               dataBase().then((data) => this.setState({
+                data,
                 loading: false
-            })
-        })
-    }
-    render() {
-        const {dataList, loading} = this.state;
-        const {postIdPerson, renderList} = this.props;
-        if (!dataList) {
-            return <Loading/>
+            }))
         }
-
-        return (
-            <ul className="list-group">
-                {!loading ?
-                    <this.peopleShow dataList={dataList} postIdPerson={postIdPerson} renderList={renderList}/> : null}
-                {loading ? <Loading/> : null}
-
-            </ul>
-        )
-
+        render() {
+            const {data, loading} = this.state;
+            return (
+                <ul className="list-group">
+                    {!loading ?
+                        <View {...this.props} data={data}/> : null}
+                    {loading ? <Loading/> : null}
+                </ul>
+            )
+        }
     }
 }
 
+const Itemlist = (props) => {
+    const {data,postIdPerson,renderList } = props;
+    return (
+        data.map((body) => {
+            const {id} = body
+            const text=renderList(body)
+            return <li className="list-group-item itemCursor" key={id} onClick={()=>postIdPerson(id)}>{text} </li>
+        })
+    )
+}
+export default itemListGhost(Itemlist,getPeople);
 
