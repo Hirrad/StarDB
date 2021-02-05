@@ -61,7 +61,6 @@ const dataItemGhost = (View, dataBase) => {
 const DataItem = (props) => {
     const {dataObtained} = props;
     const renderItem = props.children
-    console.log(props);
     return (
         <ul className="list-group ">
             {React.Children.map(renderItem, (child, indx) => {
