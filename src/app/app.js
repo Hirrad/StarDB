@@ -7,7 +7,7 @@ import Row from "../Row";
 import ErrorWrapper from "../error-wrapper";
 import DataItem from "../data-item";
 import ItemsList from "../items-list";
-
+import RenderI from "../render-i";
 export default class App extends Component {
     state = {
         id: null,
@@ -43,8 +43,4 @@ export default class App extends Component {
             </ErrorWrapper>
         </div>;
     }
-}
-const RenderI = ({parameterName, parameterDisplay, dataObtained, indx}) => {
-    return <li className="list-group-item"
-               key={indx}>{`${parameterDisplay}: ${dataObtained[parameterName]}`}</li>
 }
