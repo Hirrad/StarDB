@@ -99,7 +99,7 @@ export default class SwapiServise {
         }
     }
 }
-const swdip = new SwapiServise();
+// const swdip = new SwapiServise();
 // swip.getPeople(5).then((body) => console.log(body))
 // swdip.getStarship(6).then((body)=>console.log(body))
 
