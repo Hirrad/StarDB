@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import './random-planet.css';
-import SwapiServise from '../services/swapi_1';
 import Loading from "../loading";
 import Img404 from './src/404.jpg';
+import {withDataBase} from "../hoc-component";
+import SwapiServiseContext from "../context";
 
+class RandomPlanet extends Component {
 
-export default class RandomPlanet extends Component {
-    swapiServise = new SwapiServise();
     state = {
         planet: {},
         loading: true
@@ -27,7 +27,7 @@ componentWillUnmount() {
     }
     updatePlanet() {
         const id = Math.floor(Math.random() * 58 + 2);
-        this.swapiServise.getPlanet(id).then(this.onPlanetLoading)
+        this.props.data(id).then(this.onPlanetLoading)
     }
 
     render() {
@@ -69,3 +69,4 @@ const ItemRandomPlanet = ({planet}) => {
         </React.Fragment>
     )
 }
+export default withDataBase(RandomPlanet,'getPlanet',SwapiServiseContext)

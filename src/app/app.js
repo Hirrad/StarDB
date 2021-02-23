@@ -2,45 +2,32 @@ import React, {Component} from 'react';
 import './app.css';
 import Header from "../header";
 import RandomPlanet from "../random-planet";
-import '../services/swapi'
-import Row from "../Row";
-import ErrorWrapper from "../error-wrapper";
-import DataItem from "../data-item";
-import ItemsList from "../items-list";
-import RenderI from "../render-i";
+import SwapiServiseContext from "../context";
+import SwapiServise from "../services/swapi";
+import {PeoplePages, PlanetsPages, StarhipsPage} from "../pages";
+import {BrowserRouter, Route} from 'react-router-dom';
+
 export default class App extends Component {
     state = {
-        id: null,
+        dataServise: new SwapiServise()
     }
-    postIdPerson = (id) => {
 
-        this.setState({id})
-    }
 
     render() {
-        const peopleShow = (
-            <DataItem id={this.state.id}>
-                <RenderI parameterName={'name'}
-                         parameterDisplay={'Имя'}/>
-                <RenderI parameterName={'birthYear'}
-                         parameterDisplay={'День рождения'}/>
-                <RenderI parameterName={'gender'}
-                         parameterDisplay={'Пол'}/>
-                <RenderI parameterName={'height'}
-                         parameterDisplay={'Рост'}/>
-            </DataItem>
-        )
-        const itemList = (
-            <ItemsList postIdPerson={this.postIdPerson}
-                       renderList={(item) => `${item.id}: ${item.name}`}/>
-        )
         return <div className='container'>
-            <Header/>
-            <RandomPlanet/>
 
-            <ErrorWrapper>
-                <Row left={itemList} right={peopleShow}/>
-            </ErrorWrapper>
+            <SwapiServiseContext.Provider value={this.state.dataServise}>
+                <BrowserRouter>
+                    <Header/>
+                    <RandomPlanet/>
+                    <Route path='/starships/' component={StarhipsPage} />
+                    <Route path='/planets/' component={PlanetsPages} />
+                    <Route path='/people/' component={PeoplePages} />
+                    {/*<StarhipsPage/>*/}
+                    {/*<PlanetsPages/>*/}
+                    {/*<PeoplePages/>*/}
+                </BrowserRouter>
+            </SwapiServiseContext.Provider>
         </div>;
     }
 }
