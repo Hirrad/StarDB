@@ -22,10 +22,10 @@ export default class App extends Component {
                     <Header/>
                     <RandomPlanet/>
                     <Route path='/' render={() => <h2>Welcom to SW!</h2>} exact/>
-                    <Route path='/starships/' component={StarhipsPage} exact/>
+                    <Route path='/starships' component={StarhipsPage} exact/>
 
-                    <Route path='/planets/' component={PlanetsPages}/>
-                    <Route path='/people/' component={PeoplePages}/>
+                    <Route path='/planets/:id?' component={PlanetsPages}/>
+                    <Route path='/people' component={PeoplePages}/>
                     <Route path='/starships/:id' render={({match}) => {
                         console.log(match.params);
                        return <RenderStarshipItem id={match.params.id}/>

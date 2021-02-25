@@ -1,32 +1,25 @@
-import React, {Component} from 'react';
-
+import React from 'react';
+import {withRouter} from 'react-router-dom';
 import Row from "../Row";
 import {
     RenderPlanetItem,
     RenderPlanetsList
 } from "../components-help";
 
-class PlanetsPages extends Component {
-    state = {
-        id: null,
-    }
-    postIdPerson = (id) => {
+const PlanetsPages=({history,match})=> {
+    const {id}=match.params
+    console.log(match.params);
+    const itemList = (
+        <RenderPlanetsList postIdPerson={(id)=>history.push(id)}
+        />
+    )
 
-        this.setState({id})
-    }
-
-    render() {
-
-        const itemList = (
-            <RenderPlanetsList postIdPerson={this.postIdPerson}
-                              />
-        )
         return (
-            <Row left={itemList} right={<RenderPlanetItem id={this.state.id}/>}/>
+            <Row left={itemList} right={<RenderPlanetItem id={id}/>}/>
         )
 
 
 
-    }
+
 }
-export {PlanetsPages}
+export default withRouter(PlanetsPages);
