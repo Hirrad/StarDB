@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 const StarhipsPage=({history})=>{
       return (
           <RenderStarshipsList postIdPerson={(id)=>{
-                    history.push(`/starships/${id}`)
+                    history.push(id)
           }}
                                renderList={(item) => `${item.id}: ${item.name}`}/>
                                     )
