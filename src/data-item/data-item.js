@@ -4,6 +4,7 @@ import './data-item.css';
 const DataItem = (props) => {
     const {dataObtained} = props;
     const renderItem = props.children
+    console.log(props)
     return (
         <ul className="list-group ">
             {React.Children.map(renderItem, (child, indx) => {
